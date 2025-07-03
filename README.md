@@ -37,3 +37,5 @@ project-root/
 | **Deployment**       | Railway / Render / Vercel for backend + Python ML API       |
 | **CI/CD**            | GitHub Actions + TestFlight (iOS)                           |
 
+
+

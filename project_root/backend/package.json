@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@prisma/client": "^6.11.0",
+    "@prisma/studio": "^0.511.0",
+    "prisma": "^6.11.0",
+    "sqlite3": "^5.1.7"
+  }
+}

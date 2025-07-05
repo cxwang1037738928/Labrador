@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id    Int   @id@default(autoincrement())
+  name    String    
+  email   String    @unique
+  role    String?   // role of the user, one of 'user', 'cashier', 'manager', 'admin'
+  points    Int   @default(0)
+  password    String
+  suspicious    Boolean   @default(false)   // flags a user as suspicious, which cashiers and managers can view
+  createdAt   DateTime    @default(now())
+  lastlogin   DateTime? 
+  profile   Profile? // every user has a profile with a picture and bio, as well as a display of all their organizations and points
+  organizations    Organization[]?    @relation("UserOrangization")
+
+}
+
+model Profile{
+  id    Int   @id@default(autoincrement())
+  bio   String
+  userId    Int   @unique
+  image   String // file path to image in firebase, the profile picture
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+model Organization {
+  id    Int   @id@default(autoincrement())
+  name    String
+  description   String? // Optional description of the organization
+  leader    User[]    @relation("OrganizationLeader")
+  members    User[]   @relation("UserOrganization") // users part of the organization 
+}
+
+// TODO: Schemas for annotated images and videos

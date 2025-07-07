@@ -12,8 +12,10 @@ const roleHierarchy = {
 
 
 // Middleware to check the User's Role. The Roles are ['user', 'cashier', 'manager', 'admin']
-// Compares the role in the request to 
 
+
+
+// Returns an error if the user does not have authorization, otherwise moves onto next middleware
 const checkRole = (role) = (req, res, next) => {
 
     const userRole = req.user.role ?? 'user'; // default to using user if no role
@@ -21,6 +23,8 @@ const checkRole = (role) = (req, res, next) => {
     if (roleHierarchy[userRole] < roleHierarchy[role]){
         return res.status(403).json({error: 'Forbidden'}); // user does not have clearance for the operation
     }
+
+    next();
 
 
 };

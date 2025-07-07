@@ -20,8 +20,8 @@ model User {
   createdAt   DateTime    @default(now())
   lastlogin   DateTime? 
   profile   Profile? // every user has a profile with a picture and bio, as well as a display of all their organizations and points
-  organizations    Organization[]?    @relation("UserOrangization")
-
+  organizations    Organization[]?    @relation("UserOrganization")
+  ledOrganization   Organization[]?   @relation("OrganizationLeader")
 }
 
 model Profile{
@@ -36,7 +36,8 @@ model Organization {
   id    Int   @id@default(autoincrement())
   name    String
   description   String? // Optional description of the organization
-  leader    User[]    @relation("OrganizationLeader")
+  leaderId    Int
+  leader    User[]    @relation("OrganizationLeader", fields[leaderId], references: [id])
   members    User[]   @relation("UserOrganization") // users part of the organization 
 }
 

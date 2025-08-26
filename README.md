@@ -23,7 +23,7 @@ project-root/
 │   └── (images/videos/uploads)
 
 
-***stack***:
+***stack***: (Undecided)
 
 | Layer                | Stack                                                       |
 | -------------------- | ----------------------------------------------------------- |
@@ -32,7 +32,7 @@ project-root/
 | **Backend API**      | Node.js with Express.js                                     |
 | **ML Microservices** | Python + FastAPI (for NLP + accuracy scoring)               |
 | **Database**         | PostgreSQL (via Supabase or Railway) or Firebase            |
-| **Auth**             | Firebase Auth or custom JWT-based system                    |
+| **Auth**             | Firebase Auth                  |
 | **Storage**          | Firebase Storage / AWS S3 for storing labeled images/videos |
 | **Deployment**       | Railway / Render / Vercel for backend + Python ML API       |
 | **CI/CD**            | GitHub Actions + TestFlight (iOS)                           |

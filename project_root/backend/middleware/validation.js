@@ -37,7 +37,7 @@ const validation = {
   // validates the existence of the activation key for auth/activate
   validateActivate(req, res, next) {
     const { email, activation_key } = req.body;
-    // TODO: add more thorough validation of the activation key
+    // key validation is already done in authController.activate
     if (!email || !activation_key) {
       return res.status(400).json({ error: 'Email and activation key are required' });
     }

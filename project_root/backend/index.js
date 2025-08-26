@@ -30,6 +30,18 @@ app.use(
 const authenticateJWT = require('./middleware/auth');
 const {rolesHierarchy, checkRole} = require('./middleware/roles')
 
+// Mount routes
+
+const userRoutes = require('./routes/user');
+app.use('/user', userRoutes);
+
+const organizationRoutes = require('./routes/organization');
+app.use('/organization', organizationRoutes);
+
+const authRoutes = require('./routes/auth');
+app.use('/auth', authRoutes);
+
+
 
 
 

@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql" // modify depending on the database we're connecting to
   url      = env("DATABASE_URL")
 }
 
@@ -17,6 +17,10 @@ model User {
   points    Int   @default(0)
   password    String
   suspicious    Boolean   @default(false)   // flags a user as suspicious, which cashiers and managers can view
+  isActive  Boolean  @default(false) // 
+  activationToken String? // 
+  resetToken String? // 
+  resetTokenExpiry DateTime? // 
   createdAt   DateTime    @default(now())
   lastlogin   DateTime? 
   profile   Profile? // every user has a profile with a picture and bio, as well as a display of all their organizations and points

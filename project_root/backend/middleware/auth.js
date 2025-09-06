@@ -56,6 +56,70 @@ const authenticateJWT = async (req, res, next) => {
     }
 };
 
+// middleware to ensure authorization to only cashier or higher
+
+const requireCashier = async (req, res, next) => {
+    try {
+        await authenticateJWT(req, res, () => {});
+        
+        if (!req.user) return; // authenticateJWT already handled the error
+        
+        const allowedRoles = ['cashier', 'manager', 'admin'];
+        if (!allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ error: "Access denied. Cashier role or higher required." });
+        }
+        
+        next();
+    } catch (error) {
+        console.error('RequireCashier middleware error:', error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+// middleware to ensure authorization to only manager or higher
+
+const requireManager = async (req, res, next) => {
+    try {
+        await authenticateJWT(req, res, () => {});
+        
+        if (!req.user) return;
+        
+        const allowedRoles = ['manager', 'admin'];
+        if (!allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ error: "Access denied. Manager role or higher required." });
+        }
+        
+        next();
+    } catch (error) {
+        console.error('RequireManager middleware error:', error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+// middleware to ensure authorization to only admin or higher
+
+const requireAdmin = async (req, res, next) => {
+    try {
+        await authenticateJWT(req, res, () => {});
+        if (!req.user) return; // terminate the program if invalid JWT
+
+        const allowedRoles = ['admin'];
+        if (!allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({error: "Access denied. Admin role only."})
+        }
+        
+        next();
+    } catch (error) {
+        console.error('RequireAdmin middleware error:', error);
+        res.status(500).json({ error: "Internal server error"});
+    }
+
+
+};
+
 module.exports = {
-    authenticateJWT
+    authenticateJWT,
+    requireCashier,
+    requireManager,
+    requireAdmin
 };

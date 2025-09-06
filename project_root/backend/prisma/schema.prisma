@@ -16,6 +16,7 @@ model User {
   role    String?   // role of the user, one of 'user', 'cashier', 'manager', 'admin'
   points    Int   @default(0)
   password    String
+  validityPercentage Float?   @default(0.0)
   suspicious    Boolean   @default(false)   // flags a user as suspicious, which cashiers and managers can view
   isActive  Boolean  @default(false) // 
   activationToken String? // 
@@ -26,6 +27,8 @@ model User {
   profile   Profile? // every user has a profile with a picture and bio, as well as a display of all their organizations and points
   organizations    Organization[]?    @relation("UserOrganization")
   ledOrganization   Organization[]?   @relation("OrganizationLeader")
+
+  pointsTransactions PointsTransaction[] // field for cashiers to transfer / take points to and from user
 }
 
 model Profile{
@@ -43,6 +46,19 @@ model Organization {
   leaderId    Int
   leader    User[]    @relation("OrganizationLeader", fields[leaderId], references: [id])
   members    User[]   @relation("UserOrganization") // users part of the organization 
+}
+
+// model for keeping transaction records
+model PointsTransaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  cashierId Int
+  cashier   User     @relation(fields: [cashierId], references: [id])
+  points    Int
+  type      String   // ADDITION, DEDUCTION, etc.
+  reason    String?
+  createdAt DateTime @default(now())
 }
 
 // TODO: Schemas for annotated images and videos

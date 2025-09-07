@@ -1,13 +1,10 @@
-// controllers/managerController.js
-
-
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const managerController = {
     async getAllUsers(req, res) {
         try {
-            // get all users with their data accuracy (validityPercentage)
+            // get all users with their data accuracy 
             const users = await prisma.user.findMany({
                 where: {
                     isActive: true // only get active users
@@ -35,11 +32,11 @@ const managerController = {
         }
     },
 
-    // Disable this endpoint in production
+
+    // REMOVE IN PRODUCTION, testing only
     async getUserCredentials(req, res) {
         try {
-            
-            // get only users and cashiers (not managers or admins)
+           
             const users = await prisma.user.findMany({
                 where: {
                     isActive: true,
@@ -51,7 +48,7 @@ const managerController = {
                     id: true,
                     name: true,
                     email: true,
-                    password: true, // Disable this in production
+                    password: true, // REMOVE THIS IN PRODUCTION
                     role: true
                 },
                 orderBy: {
@@ -84,7 +81,7 @@ const managerController = {
                     },
                     _count: {
                         select: {
-                            members: true
+                            members: true // includes number of members in organization
                         }
                     }
                 },
@@ -93,7 +90,7 @@ const managerController = {
                 }
             });
 
-            // format response to include membersCount
+           
             const formattedOrganizations = organizations.map(org => ({
                 id: org.id,
                 name: org.name,
@@ -114,7 +111,6 @@ const managerController = {
     async promoteUser(req, res) {
         try {
             const { userId, role } = req.body;
-            const managerId = req.user.id;
 
             // validate input
             if (!userId || isNaN(userId) || !role) {
@@ -165,17 +161,6 @@ const managerController = {
                 }
             });
 
-            // log the promotion action
-            await prisma.auditLog.create({
-                data: {
-                    action: 'PROMOTE_USER',
-                    performedById: managerId,
-                    targetUserId: parseInt(userId),
-                    details: `Promoted from ${targetUser.role} to ${role}`,
-                    ipAddress: req.ip
-                }
-            });
-
             res.status(200).json({
                 message: `Successfully promoted user to ${role}`,
                 user: updatedUser
@@ -195,14 +180,13 @@ const managerController = {
     async demoteUser(req, res) {
         try {
             const { userId } = req.body;
-            const managerId = req.user.id;
 
-            // Validate input
+            // validate input
             if (!userId || isNaN(userId)) {
                 return res.status(400).json({ error: "Valid user ID is required" });
             }
 
-            // Check if target user exists
+            // check if target user exists
             const targetUser = await prisma.user.findUnique({
                 where: { id: parseInt(userId) },
                 select: { id: true, name: true, role: true, isActive: true }
@@ -212,15 +196,15 @@ const managerController = {
                 return res.status(404).json({ error: "User not found" });
             }
 
-            // Authorization checks
-            // Can only demote cashiers (not regular users, managers, or admins)
+            // authorization checks
+            // can only demote cashiers (not regular users, managers, or admins)
             if (targetUser.role !== 'cashier') {
                 return res.status(403).json({ 
                     error: "Can only demote cashiers. Target user is not a cashier." 
                 });
             }
 
-            // Demote to regular user role
+            // demote to regular user role
             const updatedUser = await prisma.user.update({
                 where: { id: parseInt(userId) },
                 data: { role: 'user' },
@@ -229,17 +213,6 @@ const managerController = {
                     name: true,
                     email: true,
                     role: true
-                }
-            });
-
-            // Log the demotion action
-            await prisma.auditLog.create({
-                data: {
-                    action: 'DEMOTE_USER',
-                    performedById: managerId,
-                    targetUserId: parseInt(userId),
-                    details: `Demoted from cashier to user`,
-                    ipAddress: req.ip
                 }
             });
 

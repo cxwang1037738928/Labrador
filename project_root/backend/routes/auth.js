@@ -12,7 +12,7 @@ router.post('/login', validation.validateLogin, authController.login);
 router.post('/activate', validation.validateActivate, authController.activate);
 router.post('/reset', validation.validateEmail, authController.requestPasswordReset);
 
-// then add the parameterized routes
+//parameterized routes
 router.post('/reset/:resetToken', validation.validatePasswordReset, authController.resetPassword);
 
 

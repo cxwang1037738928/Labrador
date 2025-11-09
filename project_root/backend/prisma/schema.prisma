@@ -62,3 +62,79 @@ model PointsTransaction {
 }
 
 // TODO: Schemas for annotated images and videos
+
+
+model Image {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  organizationId Int?
+  filePath       String    // Firebase/S3 storage path
+  fileName       String
+  fileSize       Int       // in bytes
+  width          Int?
+  height         Int?
+  format         String?   // jpg, png, etc.
+  uploadedAt     DateTime  @default(now())
+  status         String    @default("pending") // pending, approved, rejected
+  isVerified     Boolean   @default(false)
+  
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade) // deleting user deletes their images
+  organization   Organization?     @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  annotations    Annotation[]
+  verifications  ImageVerification[]
+  
+  @@index([userId])
+  @@index([organizationId])
+}
+
+model Annotation {
+  id          Int      @id @default(autoincrement())
+  imageId     Int
+  userId      Int
+  label       String   // The text label for this annotation
+  x           Float    // X coordinate (as percentage or pixels)
+  y           Float    // Y coordinate
+  width       Float    // Bounding box width
+  height      Float    // Bounding box height
+  color       String   @default("#ff0000") // Hex color for the box
+  confidence  Float?   @default(0.0) // ML model confidence if auto-generated
+  isValidated Boolean  @default(false) // Whether cashier has verified
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  image       Image    @relation(fields: [imageId], references: [id], onDelete: Cascade) // deleting image or user deletes all associated annotations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([imageId])
+  @@index([userId])
+}
+
+model ImageVerification {
+  id          Int      @id @default(autoincrement())
+  imageId     Int
+  verifierId  Int      // Cashier/Manager who verified
+  isValid     Boolean
+  notes       String?
+  mlScore     Float?   // ML model validation score
+  verifiedAt  DateTime @default(now())
+  
+  image       Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  verifier    User     @relation(fields: [verifierId], references: [id])
+  
+  @@index([imageId])
+  @@index([verifierId])
+}
+
+model Dataset {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdBy   Int
+  format      String   // COCO, YOLO, Pascal VOC, etc.
+  imageIds    Int[]    // Array of image IDs included
+  filePath    String?  // Path to exported dataset file
+  createdAt   DateTime @default(now())
+  exportedAt  DateTime?
+  
+  @@index([createdBy])
+}

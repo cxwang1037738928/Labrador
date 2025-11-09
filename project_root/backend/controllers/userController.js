@@ -3,6 +3,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+// corresponds to /user/me
 const userController = {
     async getMe(req, res) {
         try {

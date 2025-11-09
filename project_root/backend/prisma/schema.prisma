@@ -92,10 +92,11 @@ model Annotation {
   imageId     Int
   userId      Int
   label       String   // The text label for this annotation
-  x           Float    // X coordinate (as percentage or pixels)
+  // x and y are coordinate of the top left corner of the bounding box in pixel coordinates, not percentages.
+  x           Float    // X coordinate  
   y           Float    // Y coordinate
-  width       Float    // Bounding box width
-  height      Float    // Bounding box height
+  width       Float    // Bounding box width in absolute pixels
+  height      Float    // Bounding box height in absolute pixels
   color       String   @default("#ff0000") // Hex color for the box
   confidence  Float?   @default(0.0) // ML model confidence if auto-generated
   isValidated Boolean  @default(false) // Whether cashier has verified

@@ -41,6 +41,9 @@ app.use('/organization', organizationRoutes);
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
+const imageRoutes = require('./routes/image')
+app.use('/image', imageRoutes)
+
 
 
 

@@ -131,7 +131,7 @@ const getUserImages = async (req, res) => {
     }
 };
 
-// corresponds to image/:id
+// corresponds to image/:id (cashier+ authentication required)
 const getImageById = async (req, res) => {
     try {
         const { id } = req.params;

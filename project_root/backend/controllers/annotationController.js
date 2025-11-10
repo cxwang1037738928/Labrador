@@ -230,6 +230,8 @@ const validateAnnotation = async (req, res) => {
     }
 };
 
+
+// controllers/annotationController
 module.exports = {
     createAnnotation,
     createBulkAnnotations,

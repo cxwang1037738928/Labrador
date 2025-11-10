@@ -242,6 +242,8 @@ const updateUserValidity = async (req, res) => {
     }
 };
 
+
+// controllers/verificationController
 module.exports = {
     verifyImage,
     getImageVerifications,

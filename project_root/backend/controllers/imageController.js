@@ -266,6 +266,8 @@ const getAllImages = async (req, res) => {
     }
 };
 
+// /controllers/imageController
+
 module.exports = {
     uploadImage,
     getUserImages,

@@ -66,7 +66,7 @@ model PointsTransaction {
 
 model Image {
   id             Int       @id @default(autoincrement())
-  userId         Int
+  userId         Int       // Corresponds to the id field of the user that uploaded the image
   organizationId Int?
   filePath       String    // Firebase/S3 storage path
   fileName       String
@@ -75,7 +75,7 @@ model Image {
   height         Int?
   format         String?   // jpg, png, etc.
   uploadedAt     DateTime  @default(now())
-  status         String    @default("pending") // pending, approved, rejected
+  status         String    @default("pending") // "pending", "approved", "rejected"
   isVerified     Boolean   @default(false)
   
   user           User              @relation(fields: [userId], references: [id], onDelete: Cascade) // deleting user deletes their images
@@ -110,6 +110,8 @@ model Annotation {
   @@index([userId])
 }
 
+
+// An image can have many verifications, existing verifications cannot be modified
 model ImageVerification {
   id          Int      @id @default(autoincrement())
   imageId     Int
@@ -117,7 +119,7 @@ model ImageVerification {
   isValid     Boolean
   notes       String?
   mlScore     Float?   // ML model validation score
-  verifiedAt  DateTime @default(now())
+  verifiedAt  DateTime @default(now()) // only changed once, upon creation
   
   image       Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
   verifier    User     @relation(fields: [verifierId], references: [id])

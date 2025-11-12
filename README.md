@@ -2,27 +2,6 @@
 An app that allows users to label images and packages them into containers of data for feeding into CV models.
 
 
-***file structure***:
-
-project-root/
-├── mobile-app/ (React Native or Swift)
-│   ├── components/
-│   ├── screens/
-│   ├── api/
-│   └── utils/
-├── backend/
-│   ├── express-api/
-│   ├── routes/
-│   └── services/
-├── ml-services/
-│   ├── text-parser/ (FastAPI)
-│   └── label-scorer/ (FastAPI or Flask)
-├── database/
-│   ├── schema.sql
-├── storage/
-│   └── (images/videos/uploads)
-
-
 ***stack***: (Undecided)
 
 | Layer                | Stack                                                       |

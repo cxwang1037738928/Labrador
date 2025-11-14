@@ -39,7 +39,7 @@ export default function LoginScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>AnnotateCV</Text>
+        <Text style={styles.title}>Labrador</Text>
         <Text style={styles.subtitle}>Label Images, Train Better Models</Text>
 
         <View style={styles.form}>
@@ -75,7 +75,7 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('Register')}
+            onPress={() => navigation.navigate('Register')} // links the user to the Register Screen, set this in the stack navigator
             disabled={loading}
           >
             <Text style={styles.linkText}>

@@ -37,8 +37,8 @@ export default function RegisterScreen({ navigation }) {
       return;
     }
 
-    setLoading(true);
-    const result = await register(name, email, password);
+    setLoading(true); // set loading to true if the inputs are valid, and wait for the asynchronous auth function
+    const result = await register(name, email, password); // use the useAuth() function to register
     setLoading(false);
 
     if (result.success) {
@@ -60,15 +60,15 @@ export default function RegisterScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
           <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Join AnnotateCV to start labeling</Text>
+          <Text style={styles.subtitle}>Join Labrador to start labeling</Text>
 
           <View style={styles.form}>
             <TextInput
               style={styles.input}
               placeholder="Full Name"
-              value={name}
+              value={name}           // value inside the prompt
               onChangeText={setName} // callback function to change field whenever user types into prompt
-              editable={!loading}
+              editable={!loading}    // disables editing of input fields when the app is loading
             />
 
             <TextInput
@@ -100,19 +100,20 @@ export default function RegisterScreen({ navigation }) {
             />
 
             <TouchableOpacity
-              style={[styles.button, loading && styles.buttonDisabled]}
+              style={[styles.button, loading && styles.buttonDisabled]} // combines styles.button and styles.buttonDisabled if loading is true
+                                                                        // makes the button appear transparent-ish if loading essentially.
               onPress={handleRegister}
-              disabled={loading}
+              disabled={loading} // disallows spamming of the button
             >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
+              {loading ? ( // conditional rendering to set the button to another color if it is loading
+                <ActivityIndicator color="#fff" /> // creates a spinner with color = #fff when loading
               ) : (
-                <Text style={styles.buttonText}>Create Account</Text>
+                <Text style={styles.buttonText}>Create Account</Text> // displays text when loading is done
               )}
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
+              onPress={() => navigation.navigate('Login')}  //links the user to the Login Screen, set this in the stack navigator
               disabled={loading}
             >
               <Text style={styles.linkText}>

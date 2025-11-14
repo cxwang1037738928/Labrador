@@ -55,7 +55,7 @@ export default function RegisterScreen({ navigation }) {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // reduce the visible area of the view is not ios to account for keyboard
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
@@ -67,7 +67,7 @@ export default function RegisterScreen({ navigation }) {
               style={styles.input}
               placeholder="Full Name"
               value={name}
-              onChangeText={setName}
+              onChangeText={setName} // callback function to change field whenever user types into prompt
               editable={!loading}
             />
 

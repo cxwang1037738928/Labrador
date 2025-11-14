@@ -6,15 +6,15 @@ An app that allows users to label images and packages them into containers of da
 
 | Layer                | Stack                                                       |
 | -------------------- | ----------------------------------------------------------- |
-| **Frontend**         | React Native (mobile, cross-platform) or SwiftUI (iOS only) |
-| **Web Panel**        | React (optional admin dashboard)                            |
+| **Frontend**         | React Native                                                |
+| **Web Panel**        | Not implemented                                             |
 | **Backend API**      | Node.js with Express.js                                     |
-| **ML Microservices** | Python + FastAPI (for NLP + accuracy scoring)               |
-| **Database**         | PostgreSQL (via Supabase or Railway) or Firebase            |
-| **Auth**             | Firebase Auth                  |
-| **Storage**          | Firebase Storage / AWS S3 for storing labeled images/videos |
-| **Deployment**       | Railway / Render / Vercel for backend + Python ML API       |
-| **CI/CD**            | GitHub Actions + TestFlight (iOS)                           |
+| **ML Microservices** | Python + FastAPI (WIP)                                      |
+| **Database**         | PostgreSQL (WIP, local storage for development)             |
+| **Auth**             | JWT Token (Will augment at a later date)                    |
+| **Storage**          | Local                                                       |
+| **Deployment**       | Unimplemented                                               |
+| **CI/CD**            | GitHub Actions                                              |
 
 
 

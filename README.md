@@ -2,7 +2,7 @@
 An app that allows users to label images and packages them into containers of data for feeding into CV models.
 
 
-***stack***: (Undecided)
+***stack***: (Changes as development continues)
 
 | Layer                | Stack                                                       |
 | -------------------- | ----------------------------------------------------------- |
@@ -16,5 +16,7 @@ An app that allows users to label images and packages them into containers of da
 | **Deployment**       | Unimplemented                                               |
 | **CI/CD**            | GitHub Actions                                              |
 
+***Backend API Endpoints Specifications***: 
 
+https://docs.google.com/document/d/1x6flMz_3ke3tCsHbPocF-EyskV64FF6vmhyd98thgDw/edit?usp=sharing
 

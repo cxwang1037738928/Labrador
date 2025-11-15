@@ -6,7 +6,7 @@ An app that allows users to label images and packages them into containers of da
 
 | Layer                | Stack                                                       |
 | -------------------- | ----------------------------------------------------------- |
-| **Frontend**         | React Native                                                |
+| **Frontend**         | React Native + Native wind                                  |
 | **Web Panel**        | Not implemented                                             |
 | **Backend API**      | Node.js with Express.js                                     |
 | **ML Microservices** | Python + FastAPI (WIP)                                      |

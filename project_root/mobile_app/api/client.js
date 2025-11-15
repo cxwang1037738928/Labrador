@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // CHANGE THIS to backend URL in .ENV file
-const API_BASE_URL = 'http://192.168.1.XXX:3000/api';
+const API_BASE_URL = ' ';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

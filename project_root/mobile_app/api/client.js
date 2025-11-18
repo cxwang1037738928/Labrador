@@ -67,10 +67,10 @@ export const userAPI = {
     apiClient.patch('/user/points', { userId, points }),
   
   verifyImage: (imageId) =>
-    apiClient.post('/user/verify-image', { ImageId: imageId }),
+    apiClient.post('/user/verify-image', { ImageId: imageId }), // disabled
   
   updateValidity: (userId, percentage) =>
-    apiClient.patch('/user/validity-percentage', { userId, percentage }),
+    apiClient.patch('/user/validity-percentage', { userId, percentage }), // disabled
   
   // Manager+ endpoints
   getAllUsers: () => apiClient.get('/user/users'),

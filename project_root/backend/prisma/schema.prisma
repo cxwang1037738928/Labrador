@@ -68,7 +68,7 @@ model Image {
   id             Int       @id @default(autoincrement())
   userId         Int       // Corresponds to the id field of the user that uploaded the image
   organizationId Int?
-  filePath       String    // Firebase/S3 storage path
+  filePath       String    // local storge in production, changing to Firebase/S3 storage in deployment
   fileName       String
   fileSize       Int       // in bytes
   width          Int?

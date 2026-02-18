@@ -24,11 +24,20 @@ model User {
   resetTokenExpiry DateTime? // 
   createdAt   DateTime    @default(now())
   lastlogin   DateTime? 
-  profile   Profile? // every user has a profile with a picture and bio, as well as a display of all their organizations and points
-  organizations    Organization[]?    @relation("UserOrganization")
-  ledOrganization   Organization[]?   @relation("OrganizationLeader")
 
-  pointsTransactions PointsTransaction[] // field for cashiers to transfer / take points to and from user
+  images Image[] // images user uploaded
+
+  annotations Annotation[] // annotations user made
+
+  ImageVerification ImageVerification[] @relation("ImageVerifications")
+
+
+  profile   Profile? // every user has a profile with a picture and bio, as well as a display of all their organizations and points
+  organizations    Organization[]    @relation("UserOrganization")
+  ledOrganization   Organization[]   @relation("OrganizationLeader")
+
+  userTransactions     PointsTransaction[] @relation("UserTransactions") // transactions the user is a part of
+  cashierTransactions  PointsTransaction[] @relation("CashierTransactions") // transactions where this user acted as the cashier
 }
 
 model Profile{
@@ -44,17 +53,18 @@ model Organization {
   name    String
   description   String? // Optional description of the organization
   leaderId    Int
-  leader    User[]    @relation("OrganizationLeader", fields[leaderId], references: [id])
+  leader    User    @relation("OrganizationLeader", fields: [leaderId], references: [id])
   members    User[]   @relation("UserOrganization") // users part of the organization 
+  images Image[] // images that belong to this organizations
 }
 
 // model for keeping transaction records
 model PointsTransaction {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation("UserTransactions", fields: [userId], references: [id])
   cashierId Int
-  cashier   User     @relation(fields: [cashierId], references: [id])
+  cashier   User     @relation("CashierTransactions", fields: [cashierId], references: [id])
   points    Int
   type      String   // ADDITION, DEDUCTION, etc.
   reason    String?
@@ -79,7 +89,7 @@ model Image {
   isVerified     Boolean   @default(false)
   
   user           User              @relation(fields: [userId], references: [id], onDelete: Cascade) // deleting user deletes their images
-  organization   Organization?     @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  organization   Organization?     @relation(fields: [organizationId], references: [id], onDelete: SetNull) // images can belong to an organization as well
   annotations    Annotation[]
   verifications  ImageVerification[]
   
@@ -104,7 +114,7 @@ model Annotation {
   updatedAt   DateTime @updatedAt
   
   image       Image    @relation(fields: [imageId], references: [id], onDelete: Cascade) // deleting image or user deletes all associated annotations
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade) // user that made this annotations
   
   @@index([imageId])
   @@index([userId])
@@ -122,7 +132,7 @@ model ImageVerification {
   verifiedAt  DateTime @default(now()) // only changed once, upon creation
   
   image       Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  verifier    User     @relation(fields: [verifierId], references: [id])
+  verifier    User     @relation("ImageVerifications", fields: [verifierId], references: [id])
   
   @@index([imageId])
   @@index([verifierId])

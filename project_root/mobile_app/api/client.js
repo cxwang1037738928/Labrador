@@ -1,3 +1,5 @@
+// Sends requests to backend API and handles token management, error handling, etc.
+
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

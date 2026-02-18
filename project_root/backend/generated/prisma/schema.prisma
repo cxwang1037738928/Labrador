@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql" // modify depending on the database, this is not yet decided
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int       @id @default(autoincrement())
+  name               String
+  email              String    @unique
+  role               String? // role of the user, one of 'user', 'cashier', 'manager', 'admin'
+  points             Int       @default(0)
+  password           String
+  validityPercentage Float?    @default(0.0)
+  suspicious         Boolean   @default(false) // flags a user as suspicious, which cashiers and managers can view
+  isActive           Boolean   @default(false) // 
+  activationToken    String? // 
+  resetToken         String? // 
+  resetTokenExpiry   DateTime? // 
+  createdAt          DateTime  @default(now())
+  lastlogin          DateTime?
+
+  images Image[] // images user uploaded
+
+  annotations Annotation[] // annotations user made
+
+  ImageVerification ImageVerification[] @relation("ImageVerifications")
+
+  profile         Profile? // every user has a profile with a picture and bio, as well as a display of all their organizations and points
+  organizations   Organization[] @relation("UserOrganization")
+  ledOrganization Organization[] @relation("OrganizationLeader")
+
+  userTransactions    PointsTransaction[] @relation("UserTransactions") // transactions the user is a part of
+  cashierTransactions PointsTransaction[] @relation("CashierTransactions") // transactions where this user acted as the cashier
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  bio    String
+  userId Int    @unique
+  image  String // file path to image in firebase, the profile picture
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Organization {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String? // Optional description of the organization
+  leaderId    Int
+  leader      User    @relation("OrganizationLeader", fields: [leaderId], references: [id])
+  members     User[]  @relation("UserOrganization") // users part of the organization 
+  images      Image[] // images that belong to this organizations
+}
+
+// model for keeping transaction records
+model PointsTransaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation("UserTransactions", fields: [userId], references: [id])
+  cashierId Int
+  cashier   User     @relation("CashierTransactions", fields: [cashierId], references: [id])
+  points    Int
+  type      String // ADDITION, DEDUCTION, etc.
+  reason    String?
+  createdAt DateTime @default(now())
+}
+
+// TODO: Schemas for annotated images and videos
+
+model Image {
+  id             Int      @id @default(autoincrement())
+  userId         Int // Corresponds to the id field of the user that uploaded the image
+  organizationId Int?
+  filePath       String // local storge in production, changing to Firebase/S3 storage in deployment
+  fileName       String
+  fileSize       Int // in bytes
+  width          Int?
+  height         Int?
+  format         String? // jpg, png, etc.
+  uploadedAt     DateTime @default(now())
+  status         String   @default("pending") // "pending", "approved", "rejected"
+  isVerified     Boolean  @default(false)
+
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade) // deleting user deletes their images
+  organization  Organization?       @relation(fields: [organizationId], references: [id], onDelete: SetNull) // images can belong to an organization as well
+  annotations   Annotation[]
+  verifications ImageVerification[]
+
+  @@index([userId])
+  @@index([organizationId])
+}
+
+model Annotation {
+  id          Int      @id @default(autoincrement())
+  imageId     Int
+  userId      Int
+  label       String // The text label for this annotation
+  // x and y are coordinate of the top left corner of the bounding box in pixel coordinates, not percentages.
+  x           Float // X coordinate  
+  y           Float // Y coordinate
+  width       Float // Bounding box width in absolute pixels
+  height      Float // Bounding box height in absolute pixels
+  color       String   @default("#ff0000") // Hex color for the box
+  confidence  Float?   @default(0.0) // ML model confidence if auto-generated
+  isValidated Boolean  @default(false) // Whether cashier has verified
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade) // deleting image or user deletes all associated annotations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade) // user that made this annotations
+
+  @@index([imageId])
+  @@index([userId])
+}
+
+// An image can have many verifications, existing verifications cannot be modified
+model ImageVerification {
+  id         Int      @id @default(autoincrement())
+  imageId    Int
+  verifierId Int // Cashier/Manager who verified
+  isValid    Boolean
+  notes      String?
+  mlScore    Float? // ML model validation score
+  verifiedAt DateTime @default(now()) // only changed once, upon creation
+
+  image    Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  verifier User  @relation("ImageVerifications", fields: [verifierId], references: [id])
+
+  @@index([imageId])
+  @@index([verifierId])
+}
+
+model Dataset {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  createdBy   Int
+  format      String // COCO, YOLO, Pascal VOC, etc.
+  imageIds    Int[] // Array of image IDs included
+  filePath    String? // Path to exported dataset file
+  createdAt   DateTime  @default(now())
+  exportedAt  DateTime?
+
+  @@index([createdBy])
+}

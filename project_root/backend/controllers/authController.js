@@ -2,9 +2,9 @@
 
 // controllers for the routes/auth.js file, utilizing validation middleware from middleware/validation.js
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 const emailService = require('../utils/emailService');
 const { generateActivationToken, generateResetToken } = require('../utils/tokens');

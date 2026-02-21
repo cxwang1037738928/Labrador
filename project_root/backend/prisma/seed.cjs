@@ -1,6 +1,6 @@
 // backend/prisma/seed.js
 
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("../generated/prisma"); // matching custom output in schema
 const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();

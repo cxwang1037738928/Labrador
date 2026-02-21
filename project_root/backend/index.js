@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-const {PrismaClient} = require("@prisma/client");
+const {PrismaClient} = require("./generated/prisma");
 const prisma = new PrismaClient();
 
 

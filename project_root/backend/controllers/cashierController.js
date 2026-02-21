@@ -1,6 +1,6 @@
 // controllers/cashierController.js
 
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
 // mock ML model verification (will be replaced with actual ML integration later)

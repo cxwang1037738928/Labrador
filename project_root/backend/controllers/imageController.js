@@ -1,7 +1,7 @@
 // controllers/imageControllers.js
 
 
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 const multer = require('multer');
 const path = require('path');

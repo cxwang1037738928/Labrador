@@ -34,7 +34,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
  * 
  * For production: Update this to your deployed backend URL
  */
-const API_BASE_URL = 'http://localhost:3000'; // Update this to your backend URL
+const API_BASE_URL = 'http://localhost:3000'; 
+// Update this to your backend URL
 
 // ============================================================================
 // CONTEXT CREATION

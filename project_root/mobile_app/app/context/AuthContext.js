@@ -1,41 +1,10 @@
-/**
- * AuthContext.js
- * 
- * This file provides centralized authentication management for the mobile app.
- * It creates a React Context that handles user authentication state, JWT tokens,
- * and communicates with the backend API for all auth-related operations.
- * 
- * Key responsibilities:
- * - User registration and account activation
- * - Login/logout with JWT token management
- * - Password reset functionality
- * - Persistent authentication across app sessions
- * - Fetching and caching user profile data
- * 
- * Usage:
- * 1. Wrap your app with <AuthProvider> in _layout.js
- * 2. Use the useAuth() hook in any component to access auth functions
- */
+// app/context/AuthContext.js
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// ============================================================================
-// CONFIGURATION
-// ============================================================================
 
-/**
- * Base URL for the backend API
- * 
- * For local development:
- * - iOS Simulator: use 'http://localhost:3000'
- * - Android Emulator: use 'http://10.0.2.2:3000'
- * - Physical Device: use your computer's IP address (e.g., 'http://192.168.1.100:3000')
- * 
- * For production: Update this to your deployed backend URL
- */
-const API_BASE_URL = 'http://localhost:3000'; 
-// Update this to your backend URL
+const API_BASE_URL = 'http://localhost:3000'; // Update this to your backend URL
 
 // ============================================================================
 // CONTEXT CREATION

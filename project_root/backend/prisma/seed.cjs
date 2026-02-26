@@ -1,4 +1,4 @@
-// backend/prisma/seed.js
+// backend/prisma/seed.cjs
 
 const { PrismaClient } = require("../generated/prisma"); // matching custom output in schema
 const bcrypt = require('bcrypt');
@@ -52,11 +52,13 @@ async function seedUsers() {
         role: u.role,
         password: hashedPassword,
         isActive: true,
+        
       },
     });
 
     console.log(`Created ${u.role}: ${user.email}`);
-  }
+  };
+  console.log( await prisma.user.count() + " users in database");
 }
 
 seedUsers()

@@ -17,6 +17,7 @@ app.use(express.json());
 const cors = require("cors"); 
 
 // Configure CORS to allow only the frontend origin
+// remove frontend url
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173"; 
 app.use(
   cors({

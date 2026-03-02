@@ -1,6 +1,6 @@
 const port = process.env.PORT || 3000; // Use Railway's PORT or default to 3000
 
-
+require('dotenv').config(); // Load environment variables from .env file
 const express = require("express");
 const app = express();
 const bcrypt = require('bcrypt');
@@ -17,11 +17,11 @@ app.use(express.json());
 const cors = require("cors"); 
 
 // Configure CORS to allow only the frontend origin
-// remove frontend url
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173"; 
+// #TODO: remove frontend url
+//const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173"; 
 app.use(
   cors({
-    origin: FRONTEND_URL, // Restrict requests to this origin
+    origin: true, // Allow any origin for development; in production, specify the frontend URL
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // Adjust base on needs
     credentials: true, // Enable if using cookies/sessions
   })

@@ -4,7 +4,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const API_BASE_URL = 'http://localhost:3000'; // Update this to your backend URL
+const API_BASE_URL = 'http://10.0.0.198:3000'; // Backend API of computer's local IP address, accessible from mobile devices on the same network
 
 // ============================================================================
 // CONTEXT CREATION

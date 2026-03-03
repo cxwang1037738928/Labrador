@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 
+import { router } from 'expo-router';
+
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,10 +29,11 @@ export default function LoginScreen({ navigation }) {
     setLoading(true);
     const result = await login(email, password);
     setLoading(false);
-
     if (!result.success) {
       Alert.alert('Login Failed', result.error);
     }
+
+    router.replace('/(tabs)'); // Navigate to the main app screen after successful login
   };
 
   return (

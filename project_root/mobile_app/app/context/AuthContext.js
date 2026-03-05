@@ -10,6 +10,8 @@ const API_BASE_URL = 'http://10.0.0.198:3000'; // Backend API of computer's loca
 // CONTEXT CREATION
 // ============================================================================
 
+
+
 /**
  * Create the authentication context
  * This will be used to provide auth state and functions throughout the app

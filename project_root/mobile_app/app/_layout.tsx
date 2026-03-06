@@ -4,7 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 
 export default function RootLayout() {
   return (
-    <AuthProvider> // Wrap the entire app in the AuthProvider to provide auth context to all screens
+    <AuthProvider>
       <Stack screenOptions={{ headerShown: false }} />
     </AuthProvider>
   );

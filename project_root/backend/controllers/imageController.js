@@ -7,9 +7,10 @@ const multer = require('multer');
 const path = require('path');
 
 // Configure multer for file uploads
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/images/'); // Make sure this directory exists
+        cb(null, 'uploads/images/'); // uploads to  backend/uploads/images, make sure this directory exists
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

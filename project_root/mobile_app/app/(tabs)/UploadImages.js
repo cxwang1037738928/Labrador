@@ -55,8 +55,8 @@ export default function UploadImage() {
       });
 
       // DEBUG LOGS
-      console.log("Uploading image:", image.uri);
-      console.log("Token:", token);
+      // console.log("Uploading image:", image.uri);
+      // console.log("Token:", token);
       // DEBUG LOGS END
 
       const response = await fetch(`${API_BASE_URL}/image/upload`, {
@@ -69,9 +69,9 @@ export default function UploadImage() {
       });
 
       // DEBUG LOGS
-      console.log("Status:", response.status);
+      // console.log("Status:", response.status);
       const text = await response.text();
-      console.log("Response:", text);
+      // console.log("Response:", text);
       // DEBUG LOGS END
 
       const data = JSON.parse(text); // parse JSON after logging raw text for better debugging

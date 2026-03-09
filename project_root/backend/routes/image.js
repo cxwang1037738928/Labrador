@@ -86,7 +86,7 @@ router.get('/:imageId/verifications', requireCashier, getImageVerifications);
 router.post('/:imageId/MLverify', requireCashier, mlVerifyImage);
 
 // GET /image/:id - Get single image by ID
-router.get('/:id', requireCashier, getImageById);
+router.get('/:id', authenticateJWT, getImageById);
 
 // DELETE /image/:id - Delete image
 router.delete('/:id', authenticateJWT, deleteImage);

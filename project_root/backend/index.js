@@ -10,6 +10,15 @@ const path = require('path');
 const {PrismaClient} = require("./generated/prisma");
 const prisma = new PrismaClient();
 
+// Create the uploads/images directory if it doesn't exist
+const fs = require('fs');
+const uploadDir = path.join(__dirname, 'uploads/images');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true }); // recursively create directories if needed
+}
+
+
+
 
 // Middlewares
 app.use(express.json());
@@ -49,8 +58,8 @@ app.use('/image', imageRoutes)
 
 
 
-
-
+// Serve uploaded images statically
+app.use('/uploads', express.static('uploads'));
 
 
 const server = app.listen(port, () => {

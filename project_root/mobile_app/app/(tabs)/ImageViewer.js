@@ -39,7 +39,7 @@ export default function ImageViewer() {
     const data = await response.json();
 
     console.log("IMAGE RESPONSE:", data);
-    console.log("TOKEN:" , token);
+    //console.log("TOKEN:" , token);
 
     if(!data.error){
       setImage(data);
@@ -49,6 +49,8 @@ export default function ImageViewer() {
   }};
 
   const fetchAnnotations = async () => {
+
+    console.log("Fetching annotations for image ID:", id||null);
 
     if (!id) return; // don't call API if id is not available yet
     const response = await fetch(

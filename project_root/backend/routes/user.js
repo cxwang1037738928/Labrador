@@ -6,26 +6,26 @@ const userController = require('../controllers/userController');
 const cashierController = require('../controllers/cashierController');
 const managerController = require('../controllers/managerController');
 const adminController = require('../controllers/adminController');
-const auth = require('../middleware/auth'); // use existing authorization middleware
+const {authenticateJWT, requireCashier, requireManager, requireAdmin} = require('../middleware/auth'); // use existing authorization middleware
 
 // static routes
-router.get('/me', auth.authenticateJWT, userController.getMe); // only authenticate
+router.get('/me', authenticateJWT, userController.getMe); // only authenticate
 
 // protected routes for cashier auth or above
-router.patch('/points', auth.requireCashier, cashierController.addPoints);
-router.post('/verify-image', auth.requireCashier, cashierController.verifyImage);
-router.patch('/validity-percentage', auth.requireCashier, cashierController.updateValidityPercentage);
+router.patch('/points', authenticateJWT ,requireCashier, cashierController.addPoints);
+router.post('/verify-image', authenticateJWT, requireCashier, cashierController.verifyImage);
+router.patch('/validity-percentage', authenticateJWT, requireCashier, cashierController.updateValidityPercentage);
 
 // protected routes for manager auth or above
-router.get('/users', auth.requireManager, managerController.getAllUsers);
-router.get('/credentials', auth.requireManager, managerController.getUserCredentials);
-router.get('/organizations', auth.requireManager, managerController.getAllOrganizations);
-router.patch('/promote', auth.requireManager, managerController.promoteUser);
-router.patch('/demote', auth.requireManager, managerController.demoteUser);
+router.get('/users', authenticateJWT, requireManager, managerController.getAllUsers);
+router.get('/credentials', authenticateJWT, requireManager, managerController.getUserCredentials);
+router.get('/organizations', authenticateJWT, requireManager, managerController.getAllOrganizations);
+router.patch('/promote', authenticateJWT, requireManager, managerController.promoteUser);
+router.patch('/demote', authenticateJWT, requireManager, managerController.demoteUser);
 
 // protected routes for admin auth or above
-router.patch('/admin/promote', auth.requireAdmin, adminController.promoteToManager);
-router.patch('/admin/demote', auth.requireAdmin, adminController.demoteManager);
+router.patch('/admin/promote', authenticateJWT, requireAdmin, adminController.promoteToManager);
+router.patch('/admin/demote', authenticateJWT, requireAdmin, adminController.demoteManager);
 
 // future parametized routes
 

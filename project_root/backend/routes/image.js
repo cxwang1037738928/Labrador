@@ -42,13 +42,13 @@ router.post('/upload', authenticateJWT, uploadImage);
 router.get('/my-image', authenticateJWT, getUserImages);
 
 // PATCH /image/user-validity - Update user validity percentage (Cashier+)
-router.patch('/user-validity', requireCashier, updateUserValidity);
+router.patch('/user-validity', authenticateJWT, requireCashier, updateUserValidity);
 
 // GET /image/all/list - Get all images with filters (Cashier+)
-router.get('/all/list', requireCashier, getAllImages);
+router.get('/all/list', authenticateJWT, requireCashier, getAllImages);
 
 // GET /image/pending/list - Get pending images (Cashier+)
-router.get('/pending/list', requireCashier, getPendingImages);
+router.get('/pending/list', authenticateJWT, requireCashier, getPendingImages);
 
 // -------------------------------------------------------------------------
 // ANNOTATION ROUTES
@@ -64,7 +64,7 @@ router.post('/annotation/bulk', authenticateJWT, createBulkAnnotations);
 router.get('/annotation/:imageId/annotations', authenticateJWT, getImageAnnotations);
 
 // PATCH /image/annotation/:id/validate - Validate annotation (Cashier+)
-router.patch('/annotation/:id/validate', requireCashier, validateAnnotation);
+router.patch('/annotation/:id/validate', authenticateJWT, requireCashier, validateAnnotation);
 
 // PATCH /image/annotation/:id - Update annotation
 router.patch('/annotation/:id', authenticateJWT, updateAnnotation);
@@ -77,13 +77,13 @@ router.delete('/annotation/:id', authenticateJWT, deleteAnnotation);
 // -------------------------------------------------------------------------
 
 // POST /image/:imageId/verify - Verify image (Cashier+)
-router.post('/:imageId/verify', requireCashier, verifyImage);
+router.post('/:imageId/verify', authenticateJWT, requireCashier, verifyImage);
 
 // GET /image/:imageId/verifications - Get verifications for image (Cashier+)
-router.get('/:imageId/verifications', requireCashier, getImageVerifications);
+router.get('/:imageId/verifications', authenticateJWT, requireCashier, getImageVerifications);
 
 // POST /image/:imageId/MLverify - ML verify image (Cashier+)
-router.post('/:imageId/MLverify', requireCashier, mlVerifyImage);
+router.post('/:imageId/MLverify', authenticateJWT, requireCashier, mlVerifyImage);
 
 // GET /image/:id - Get single image by ID
 router.get('/:id', authenticateJWT, getImageById);

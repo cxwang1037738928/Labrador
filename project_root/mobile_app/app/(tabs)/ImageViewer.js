@@ -1,137 +1,134 @@
 // mobile_app/app/(tabs)/UploadImages.js
 
-import React, { useEffect, useState } from 'react';
+// allows user to view a single image and its annotations, and add new annotations
+// by dragging on the image to create a bounding box and entering a label for the annotation
+
+import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   TextInput,
   Button,
-  FlatList
-} from 'react-native';
+  Text
+} from "react-native";
 
-import { useLocalSearchParams } from 'expo-router';
-import { useAuth } from '../context/AuthContext';
+import AnnotationCanvas from "../components/AnnotationCanvas";
+import { useLocalSearchParams } from "expo-router";
 
-const API_BASE_URL = 'http://10.0.0.198:3000';
+const API_BASE_URL = "http://10.0.0.198:3000";
 
 export default function ImageViewer() {
 
-  const { id } = useLocalSearchParams();
-  const { token } = useAuth();
+  const { id, token } = useLocalSearchParams();
 
   const [image, setImage] = useState(null);
   const [annotations, setAnnotations] = useState([]);
 
-  const [label, setLabel] = useState('');
+  const [imageLayout, setImageLayout] = useState({
+    width: 1,
+    height: 1
+  });
+  
 
-  const fetchImage = async () => {
-    
-    if (!id) return; // don't call API if id is not available yet
-    try{
-    const response = await fetch(`${API_BASE_URL}/image/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await response.json();
-
-    console.log("IMAGE RESPONSE:", data);
-    //console.log("TOKEN:" , token);
-
-    if(!data.error){
-      setImage(data);
-    }
-  }catch(error){
-    console.error("Error fetching image:", error);
-  }};
-
-  const fetchAnnotations = async () => {
-
-    console.log("Fetching annotations for image ID:", id||null);
-
-    if (!id) return; // don't call API if id is not available yet
-    const response = await fetch(
-      `${API_BASE_URL}/image/annotation/${id}/annotations`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-    setAnnotations(data);
-  };
-
-  const addAnnotation = async () => {
-
-    await fetch(`${API_BASE_URL}/image/annotation`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-
-      body: JSON.stringify({
-        imageId: Number(id),
-        label,
-        x: 0.2,
-        y: 0.2,
-        width: 0.2,
-        height: 0.2,
-      }),
-    });
-
-    setLabel('');
-    fetchAnnotations();
-  };
+  const [label, setLabel] = useState("");
+  const [color, setColor] = useState("red");
 
   useEffect(() => {
-    if(id && token){
-      fetchImage();
-      fetchAnnotations();
-    }
-  }, [id, token]);
+    fetchImage();
+    fetchAnnotations();
+  }, []);
 
-  if (!image) {
-    return <Text>Loading...</Text>;
+const fetchImage = async () => {
+  if (!id || !token) return; // don't fetch if id or token is missing
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/image/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // include your JWT token
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await res.json();
+    console.log("SERVER RESPONSE:", data);
+
+    if (!data.error) setImage(data);
+  } catch (error) {
+    console.error("Error fetching image:", error);
   }
+};
+
+  const fetchAnnotations = async () => {
+    if (!id || !token) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/image/${id}/annotations`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // include JWT here as well
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await res.json();
+      if (!data.error) setAnnotations(data);
+      } catch (error) {
+        console.error("Error fetching annotations:", error);
+      }
+    };
+
+    if (!image) {
+      return <Text>Loading...</Text>;
+    }
 
   return (
     <View style={styles.container}>
 
-      <Image
-      source={{
-      uri: image?.filePath
-      ? `${API_BASE_URL}/${image.filePath.replace(/\\/g, "/")}`
-      : undefined,
-      }}
-      style={styles.image}
-      />
+      <View
+        style={styles.imageContainer}
+        onLayout={(e) => {
+          const { width, height } = e.nativeEvent.layout;
+          setImageLayout({ width, height });
+        }}
+      >
 
-      <Text style={styles.title}>Annotations</Text>
+        <Image
+          source={{
+            uri: `${API_BASE_URL}/${image.filePath.replace(/\\/g, "/")}`
+          }}
+          style={styles.image}
+          resizeMode="contain"
+        />
 
-      <FlatList
-        data={annotations}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Text>
-            {item.label} ({item.x}, {item.y})
-          </Text>
-        )}
-      />
+        <AnnotationCanvas
+          annotations={annotations}
+          setAnnotations={setAnnotations}
+          imageWidth={imageLayout.width}
+          imageHeight={imageLayout.height}
+          label={label}
+          color={color}
+        />
 
-      <TextInput
-        placeholder="Label"
-        value={label}
-        onChangeText={setLabel}
-        style={styles.input}
-      />
+      </View>
 
-      <Button title="Add Annotation" onPress={addAnnotation} />
+      <View style={styles.toolbar}>
+
+        <TextInput
+          placeholder="Label"
+          value={label}
+          onChangeText={setLabel}
+          style={styles.input}
+        />
+
+        <View style={styles.colors}>
+
+          <Button title="Red" onPress={() => setColor("red")} />
+          <Button title="Green" onPress={() => setColor("green")} />
+          <Button title="Blue" onPress={() => setColor("blue")} />
+
+        </View>
+
+      </View>
 
     </View>
   );
@@ -140,26 +137,33 @@ export default function ImageViewer() {
 const styles = StyleSheet.create({
 
   container: {
+    flex: 1
+  },
+
+  imageContainer: {
     flex: 1,
-    padding: 20,
+    position: "relative"
   },
 
   image: {
-    width: '100%',
-    height: 300,
-    marginBottom: 20,
+    width: "100%",
+    height: "100%"
   },
 
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  toolbar: {
+    padding: 10,
+    backgroundColor: "#eee"
   },
 
   input: {
     borderWidth: 1,
-    padding: 10,
-    marginVertical: 10,
+    padding: 8,
+    marginBottom: 10
   },
+
+  colors: {
+    flexDirection: "row",
+    justifyContent: "space-around"
+  }
 
 });

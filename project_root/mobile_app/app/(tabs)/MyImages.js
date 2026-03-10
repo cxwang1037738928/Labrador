@@ -67,7 +67,7 @@ export default function MyImages() {
         <TouchableOpacity
           style={styles.card}
           onPress={() =>
-            router.push(`/ImageViewer?id=${item.id}`)
+            router.push(`/ImageViewer?id=${item.id}&token=${token}`)
           }
         >
 

@@ -81,7 +81,7 @@ export default function UploadImage() {
 
         const imageId = data.imageId;
 
-        router.push(`/ImageViewer?id=${imageId}`);
+        router.push(`/ImageViewer?id=${imageId}&token=${token}`);
         } else {
         Alert.alert("Upload failed", data.message || "Error uploading image");
       }

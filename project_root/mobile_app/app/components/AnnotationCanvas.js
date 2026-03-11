@@ -42,6 +42,10 @@ export default function AnnotationCanvas({
 
       const { locationX, locationY } = evt.nativeEvent;
 
+      // If user taps empty space (no drag), clear selection & draft
+      setSelectedAnnotation(null);
+      setDraftAnnotation(null);
+
       setDrawingBox({
         x: locationX,
         y: locationY,
@@ -54,11 +58,15 @@ export default function AnnotationCanvas({
 
       const { locationX, locationY } = evt.nativeEvent;
 
-      setDrawingBox((b) => ({
-        ...b,
-        width: locationX - b.x,
-        height: locationY - b.y
-      }));
+      setDrawingBox((b) => {
+        if (!b) return b;
+
+        return {
+          ...b,
+          width: locationX - b.x,
+          height: locationY - b.y
+        };
+      });
     },
 
     onPanResponderRelease: () => {
@@ -81,7 +89,6 @@ export default function AnnotationCanvas({
       });
 
       setDraftAnnotation(normalized);
-
       setDrawingBox(null);
     }
   });
@@ -106,7 +113,11 @@ export default function AnnotationCanvas({
               stroke={a.color || "yellow"}
               strokeWidth={selected ? 4 : 2}
               fill="transparent"
-              onPress={() => setSelectedAnnotation(a)}
+              onPress={() =>
+                setSelectedAnnotation(prev =>
+                  prev?.id === a.id ? null : a
+                )
+              }
             />
           );
         })}

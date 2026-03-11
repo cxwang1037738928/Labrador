@@ -38,6 +38,7 @@ export default function MyImages() {
 
       const data = await response.json();
       setImages(data);
+      // console.log("Fetched images:", data.id.toString());
 
     } catch (error) {
       console.error(error);
@@ -67,6 +68,7 @@ export default function MyImages() {
         <TouchableOpacity
           style={styles.card}
           onPress={() =>
+            console.log("Navigating to ImageViewer with id:", item.id) ||
             router.push(`/ImageViewer?id=${item.id}&token=${token}`)
           }
         >

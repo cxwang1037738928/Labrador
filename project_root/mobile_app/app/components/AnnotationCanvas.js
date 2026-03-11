@@ -1,21 +1,24 @@
-// mobile_app/app/(tabs)/AnnotationCanvas.js
+// mobile_app/app/components/AnnotationCanvas.js
 
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import Svg, { Rect, Circle } from "react-native-svg";
+import Svg, { Rect } from "react-native-svg";
 import { PanResponder } from "react-native";
+
+const MIN_BOX_SIZE = 10;
 
 export default function AnnotationCanvas({
   annotations,
-  setAnnotations,
+  draftAnnotation,
+  setDraftAnnotation,
+  selectedAnnotation,
+  setSelectedAnnotation,
   imageWidth,
   imageHeight,
-  color,
-  label
+  color
 }) {
 
-  const [draftBox, setDraftBox] = useState(null);
-  const [selectedId, setSelectedId] = useState(null);
+  const [drawingBox, setDrawingBox] = useState(null);
 
   const normalize = (box) => ({
     x: box.x / imageWidth,
@@ -39,7 +42,7 @@ export default function AnnotationCanvas({
 
       const { locationX, locationY } = evt.nativeEvent;
 
-      setDraftBox({
+      setDrawingBox({
         x: locationX,
         y: locationY,
         width: 0,
@@ -51,7 +54,7 @@ export default function AnnotationCanvas({
 
       const { locationX, locationY } = evt.nativeEvent;
 
-      setDraftBox((b) => ({
+      setDrawingBox((b) => ({
         ...b,
         width: locationX - b.x,
         height: locationY - b.y
@@ -60,51 +63,38 @@ export default function AnnotationCanvas({
 
     onPanResponderRelease: () => {
 
-      if (!draftBox) return;
+      if (!drawingBox) return;
 
-      const normalized = normalize(draftBox);
+      const width = Math.abs(drawingBox.width);
+      const height = Math.abs(drawingBox.height);
 
-      const newAnnotation = {
-        id: Date.now().toString(),
-        label,
-        color,
-        ...normalized
-      };
+      if (width < MIN_BOX_SIZE || height < MIN_BOX_SIZE) {
+        setDrawingBox(null);
+        return;
+      }
 
-      setAnnotations([...annotations, newAnnotation]);
+      const normalized = normalize({
+        x: Math.min(drawingBox.x, drawingBox.x + drawingBox.width),
+        y: Math.min(drawingBox.y, drawingBox.y + drawingBox.height),
+        width,
+        height
+      });
 
-      setDraftBox(null);
+      setDraftAnnotation(normalized);
+
+      setDrawingBox(null);
     }
   });
 
-  const moveAnnotation = (id, dx, dy) => {
-
-    setAnnotations((prev) =>
-      prev.map((a) => {
-
-        if (a.id !== id) return a;
-
-        const box = denormalize(a);
-
-        box.x += dx;
-        box.y += dy;
-
-        return { ...a, ...normalize(box) };
-      })
-    );
-  };
-
   return (
-    <View
-      style={StyleSheet.absoluteFill}
-      {...panResponder.panHandlers}
-    >
+    <View style={StyleSheet.absoluteFill} {...panResponder.panHandlers}>
 
       <Svg width="100%" height="100%">
 
         {annotations.map((a) => {
 
           const box = denormalize(a);
+          const selected = selectedAnnotation?.id === a.id;
 
           return (
             <Rect
@@ -114,23 +104,40 @@ export default function AnnotationCanvas({
               width={box.width}
               height={box.height}
               stroke={a.color || "yellow"}
-              strokeWidth="2"
+              strokeWidth={selected ? 4 : 2}
               fill="transparent"
-              onPress={() => setSelectedId(a.id)}
+              onPress={() => setSelectedAnnotation(a)}
             />
           );
         })}
 
-        {draftBox && (
+        {draftAnnotation && (
+
           <Rect
-            x={draftBox.x}
-            y={draftBox.y}
-            width={draftBox.width}
-            height={draftBox.height}
+            x={draftAnnotation.x * imageWidth}
+            y={draftAnnotation.y * imageHeight}
+            width={draftAnnotation.width * imageWidth}
+            height={draftAnnotation.height * imageHeight}
+            stroke={color || "blue"}
+            strokeDasharray="4"
+            strokeWidth="2"
+            fill="transparent"
+          />
+
+        )}
+
+        {drawingBox && (
+
+          <Rect
+            x={drawingBox.x}
+            y={drawingBox.y}
+            width={drawingBox.width}
+            height={drawingBox.height}
             stroke="blue"
             strokeWidth="2"
             fill="transparent"
           />
+
         )}
 
       </Svg>

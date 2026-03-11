@@ -91,14 +91,14 @@ export default function AnnotationCanvas({
 
       <Svg width="100%" height="100%">
 
-        {annotations.map((a) => {
+        {annotations.map((a, index) => {
 
           const box = denormalize(a);
           const selected = selectedAnnotation?.id === a.id;
 
           return (
             <Rect
-              key={a.id}
+              key={a.id ?? `annotation-${index}`}
               x={box.x}
               y={box.y}
               width={box.width}

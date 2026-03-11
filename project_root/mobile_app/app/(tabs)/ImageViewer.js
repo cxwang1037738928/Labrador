@@ -40,9 +40,10 @@ export default function ImageViewer() {
   const [color, setColor] = useState("red");
 
   useEffect(() => {
+    if(!id || !token) return; // don't call API if id or token is not available yet
     fetchImage();
     fetchAnnotations();
-  }, []);
+  }, [id, token]);
 
   const fetchImage = async () => {
     try {
@@ -103,24 +104,44 @@ export default function ImageViewer() {
         },
         body: JSON.stringify({
           imageId: Number(id),
-          label,
-          color,
-          ...draftAnnotation
+          label: label,
+          color: color,
+          x: draftAnnotation.x,
+          y: draftAnnotation.y,
+          width: draftAnnotation.width,
+          height: draftAnnotation.height
         })
       });
 
-      const savedAnnotation = await res.json();
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Server error:", text);
+        Alert.alert("Failed to save annotation");
+        return;
+      }
 
-      if (!savedAnnotation.error) {
+      // Safely parse JSON
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response");
+        return;
+      }
 
-        setAnnotations(prev => [...prev, savedAnnotation]);
+      if (!data?.error) {
 
+        // Clear local draft state
         setDraftAnnotation(null);
         setLabel("");
+
+        // Reload annotations from backend
+        await fetchAnnotations();
       }
 
     } catch (err) {
       console.error("Submit annotation error:", err);
+      Alert.alert("Network error while saving annotation");
     }
   };
 

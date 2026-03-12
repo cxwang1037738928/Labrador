@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import Svg, { Rect } from "react-native-svg";
+import Svg, { Rect, Text as SvgText } from "react-native-svg";
 import { PanResponder } from "react-native";
 
 const MIN_BOX_SIZE = 10;
@@ -100,12 +100,13 @@ export default function AnnotationCanvas({
 
         {annotations.map((a, index) => {
 
-          const box = denormalize(a);
-          const selected = selectedAnnotation?.id === a.id;
+        const box = denormalize(a);
+        const selected = selectedAnnotation?.id === a.id;
 
-          return (
+        return (
+          <React.Fragment key={a.id ?? `annotation-${index}`}>
+
             <Rect
-              key={a.id ?? `annotation-${index}`}
               x={box.x}
               y={box.y}
               width={box.width}
@@ -119,8 +120,20 @@ export default function AnnotationCanvas({
                 )
               }
             />
-          );
-        })}
+
+            <SvgText
+              x={box.x + box.width - 4}
+              y={box.y + box.height - 4}
+              fontSize="12"
+              fill={a.color || "yellow"}
+              textAnchor="end"
+            >
+              {a.label}
+            </SvgText>
+
+          </React.Fragment>
+        );
+      })}
 
         {draftAnnotation && (
 

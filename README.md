@@ -4,19 +4,19 @@ An app that allows users to label images and package them into containers of dat
 The locally deployed app currently features:
 
 # Login interface:
-![Login interface](https://cdn.discordapp.com/attachments/735587935067439196/1490531420232486933/image0.jpg)
+![Login interface](project_root/makefile/Logo.jpg)
 
 # Index and profile page:
-![Index and profile page](https://cdn.discordapp.com/attachments/735587935067439196/1490531503866773524/image0.jpg)
+![Index and profile page](project-root/makefile/Index.jpg)
 
 # Image Labelling page:
-![Image Labelling page](https://cdn.discordapp.com/attachments/735587935067439196/1490531566047465472/image0.jpg)
+![Image Labelling page](project-root/makefile/Labelled.jpg)
 
 # Pages to upload Images:
-![Upload Images page](https://cdn.discordapp.com/attachments/735587935067439196/1490531621399433247/image0.jpg)
+![Upload Images page](project-root/makefile/Upload.jpg)
 
 # Image browser to view uploaded images:
-![Image browser](https://cdn.discordapp.com/attachments/735587935067439196/1490531704912482364/image0.jpg)
+![Image browser](project-root/makefile/Browse.jpg)
 
 ## To run locally, do the following:
 

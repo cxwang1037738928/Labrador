@@ -24,7 +24,7 @@ The locally deployed app currently features:
 
 ### 1. Clone the repository
 ```bash
-git clone 
+git clone https://github.com/cxwang1037738928/Labrador.git
 cd project_root
 ```
 

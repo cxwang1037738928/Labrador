@@ -4,19 +4,20 @@ An app that allows users to label images and package them into containers of dat
 The locally deployed app currently features:
 
 # Login interface:
-![Login interface](project_root/Makefile/Logo.jpg)
+<img src="project_root/Makefile/Logo.jpg" alt="Login interface" width="400">
 
 # Index and profile page:
-![Index and profile page](project_root/Makefile/Index.jpg)
+<img src="project_root/Makefile/Index.jpg" alt="Index and profile page" width="400">
 
 # Image Labelling page:
-![Image Labelling page](project_root/Makefile/Labelled.jpg)
+<img src="project_root/Makefile/Labelled.jpg" alt="Image Labelling page" width="400">
 
 # Pages to upload Images:
-![Upload Images page](project_root/Makefile/Upload.jpg)
+<img src="project_root/Makefile/Upload.jpg" alt="Upload Images page" width="400">
 
 # Image browser to view uploaded images:
-![Image browser](project_root/Makefile/Browse.jpg)
+<img src="project_root/Makefile/Browse.jpg" alt="Image browser" width="400">
+
 
 ## To run locally, do the following:
 

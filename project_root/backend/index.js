@@ -16,15 +16,10 @@ const uploadDir = path.join(__dirname, 'uploads/images');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true }); // recursively create directories if needed
 }
-
-
-
-
 // Middlewares
 app.use(express.json());
 
 const cors = require("cors"); 
-
 // Configure CORS to allow only the frontend origin
 // #TODO: remove frontend url
 //const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173"; 
@@ -36,36 +31,24 @@ app.use(
   })
 );
 
-
 const authenticateJWT = require('./middleware/auth');
 const {rolesHierarchy, checkRole} = require('./middleware/roles')
 
 // Mount routes
-
 const userRoutes = require('./routes/user');
 app.use('/user', userRoutes);
-
 const organizationRoutes = require('./routes/organization');
 app.use('/organization', organizationRoutes);
-
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
-
 const imageRoutes = require('./routes/image')
 app.use('/image', imageRoutes)
-
-
-
-
-
 // Serve uploaded images statically
 app.use('/uploads', express.static('uploads'));
-
 
 const server = app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
-
 server.on('error', (err) => {
     console.error(`cannot start server: ${err.message}`);
     process.exit(1);

@@ -1,4 +1,4 @@
-// controllers/imageControllers.js
+// backend/controllers/imageControllers.js
 
 
 const { PrismaClient } = require('../generated/prisma');

@@ -8,7 +8,6 @@ const prisma = new PrismaClient();
 const authenticateJWT = async (req, res, next) => {
     try {
         const authHeader = req.header('authorization');
-        
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return res.status(401).json({ error: "No valid authorization token found. Format: Bearer <token>" });
         }
